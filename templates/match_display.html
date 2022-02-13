@@ -1,0 +1,18 @@
+{% if wordlist | length > 0 %}
+<div class="px-20 py-2 flex justify-center cursor-pointer hover:bg-gray-100" onclick="fillWord(this)">
+    <div class="text-gray-600 text-center mx-1">{{ wordlist[0][0] | upper }}</div>
+    <div class="text-gray-600 text-center mx-1">{{ wordlist[0][1] | upper }}</div>
+    <div class="text-gray-600 text-center mx-1">{{ wordlist[0][2] | upper }}</div>
+    <div class="text-gray-600 text-center mx-1">{{ wordlist[0][3] | upper }}</div>
+    <div class="text-gray-600 text-center mx-1">{{ wordlist[0][4] | upper }}</div>
+</div>
+{% endif %}
+{% for word in wordlist[1:] %}
+<div class="px-20 py-2 flex justify-center border-t cursor-pointer hover:bg-gray-100" onclick="fillWord(this)">
+    <div class="text-gray-600 text-center mx-1">{{ word[0] | upper }}</div>
+    <div class="text-gray-600 text-center mx-1">{{ word[1] | upper }}</div>
+    <div class="text-gray-600 text-center mx-1">{{ word[2] | upper }}</div>
+    <div class="text-gray-600 text-center mx-1">{{ word[3] | upper }}</div>
+    <div class="text-gray-600 text-center mx-1">{{ word[4] | upper }}</div>
+</div>
+{% endfor %}

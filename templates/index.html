@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+     <meta charset="utf-8">
+     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+     <script defer src="{{ url_for('static', filename='src.js')}}"></script>
+</head>
+<body class="bg-gray-50" style="font-family: 'Roboto', sans-serif">
+    <div class="flex justify-center">
+        <div class="flex-col max-w-md mr-10">
+            <div>
+                <h1 class="text-gray-600 text-3xl text-center mt-12">Wordle Solver</h1>
+            </div>
+            <form method='POST' id="guess_form">
+                <div class="max-w-md mt-5 mx-12 rounded mx-auto">
+                    <div class="flex justify-between font-medium">
+                        <div class="rounded p-4 w-20 shadow bg-gray-600 hover:bg-gray-700 text-center text-white mr-2 cursor-pointer text-lg select-none" id="button0" onclick="changeState(0)">?</div>
+                        <div class="rounded p-4 w-20 shadow bg-gray-600 hover:bg-gray-700 text-center text-white mr-2 cursor-pointer text-lg select-none" id="button1" onclick="changeState(1)">?</div>
+                        <div class="rounded p-4 w-20 shadow bg-gray-600 hover:bg-gray-700 text-center text-white mr-2 cursor-pointer text-lg select-none" id="button2" onclick="changeState(2)">?</div>
+                        <div class="rounded p-4 w-20 shadow bg-gray-600 hover:bg-gray-700 text-center text-white mr-2 cursor-pointer text-lg select-none" id="button3" onclick="changeState(3)">?</div>
+                        <div class="rounded p-4 w-20 shadow bg-gray-600 hover:bg-gray-700 text-center text-white cursor-pointer text-lg select-none" id="button4" onclick="changeState(4)">?</div>
+                    </div>
+                    <div class="flex justify-center mt-3">
+                        <button type="submit" class="text-sm w-full transition duration-150 hover:bg-indigo-600 rounded p-4 shadow bg-indigo-500 text-white mr-2 font-medium" onclick="load()">Próba</button>
+                        <div class="text-sm w-full transition duration-150 hover:bg-indigo-600 rounded p-4 shadow bg-indigo-500 text-white text-center cursor-pointer font-medium" onclick='redirect("/clear")'>Újrakezd</div>
+                    </div>
+                </div>
+                <input class="hidden" name="guess" value="">
+                <input class="hidden" name="resp0" type="number" value="0">
+                <input class="hidden" name="resp1" type="number" value="0">
+                <input class="hidden" name="resp2" type="number" value="0">
+                <input class="hidden" name="resp3" type="number" value="0">
+                <input class="hidden" name="resp4" type="number" value="0">
+                <div class="flex-row max-w-md mx-auto mt-10 justify-center">
+                    <div class="flex w-full justify-center">
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['Q'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['Q'] }}-600 cursor-pointer select-none hover:bg-gray-600">Q</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['W'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['W'] }}-600 cursor-pointer select-none ml-1">W</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['E'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['E'] }}-600 cursor-pointer select-none ml-1">E</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['R'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['R'] }}-600 cursor-pointer select-none ml-1">R</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['T'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['T'] }}-600 cursor-pointer select-none ml-1">T</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['Z'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['Z'] }}-600 cursor-pointer select-none ml-1">Z</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['U'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['U'] }}-600 cursor-pointer select-none ml-1">U</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['I'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['I'] }}-600 cursor-pointer select-none ml-1">I</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['O'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['O'] }}-600 cursor-pointer select-none ml-1">O</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['P'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['P'] }}-600 cursor-pointer select-none ml-1">P</div>
+                    </div>
+                    <div class="flex w-full justify-center mt-2">
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['A'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['A'] }}-600 cursor-pointer select-none">A</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['S'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['S'] }}-600 cursor-pointer select-none ml-1">S</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['D'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['D'] }}-600 cursor-pointer select-none ml-1">D</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['F'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['F'] }}-600 cursor-pointer select-none ml-1">F</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['G'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['G'] }}-600 cursor-pointer select-none ml-1">G</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['H'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['H'] }}-600 cursor-pointer select-none ml-1">H</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['J'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['J'] }}-600 cursor-pointer select-none ml-1">J</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['K'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['K'] }}-600 cursor-pointer select-none ml-1">K</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['L'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['L'] }}-600 cursor-pointer select-none ml-1">L</div>
+                    </div>
+                    <div class="flex w-full justify-center mt-2">
+                        <button class="rounded w-16 py-2 bg-gray-500 text-white text-center font-medium shadow-md hover:bg-gray-600 cursor-pointer select-none">Enter</button>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['Y'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['Y'] }}-600 cursor-pointer select-none ml-1">Y</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['X'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['X'] }}-600 cursor-pointer select-none ml-1">X</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['C'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['C'] }}-600 cursor-pointer select-none ml-1">C</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['V'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['V'] }}-600 cursor-pointer select-none ml-1">V</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['B'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['B'] }}-600 cursor-pointer select-none ml-1">B</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['N'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['N'] }}-600 cursor-pointer select-none ml-1">N</div>
+                        <div onclick="nextChar(this)" class="rounded w-10 py-2 bg-{{ color['M'] }}-500 text-white text-center font-medium shadow-md hover:bg-{{ color['M'] }}-600 cursor-pointer select-none ml-1">M</div>
+                        <div onclick="delChar(this)" class="rounded w-16 py-2 bg-gray-500 text-white text-center font-medium shadow-md hover:bg-gray-600 cursor-pointer select-none ml-1">Törlés</div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="flex-row mt-20 w-56">
+            <div class="bg-white shadow-md mt-6 text-sm rounded">
+                <div class="bg-gray-600 text-white py-4 rounded-t text-center font-medium tracking-wide">Ajánlott tipp</div>
+                <div class="py-3 h-10 flex justify-center items-center cursor-pointer hover:bg-gray-100" onclick="fillWord(this)" id="suggestion_display">
+                    <div class="text-gray-500 text-center">{{ optimum[0] | upper }}</div>
+                    <div class="text-gray-500 text-center ml-1">{{ optimum[1] | upper }}</div>
+                    <div class="text-gray-500 text-center ml-1">{{ optimum[2] | upper }}</div>
+                    <div class="text-gray-500 text-center ml-1">{{ optimum[3] | upper }}</div>
+                    <div class="text-gray-500 text-center ml-1">{{ optimum[4] | upper }}</div>
+                </div>
+            </div>
+            <div class="bg-white shadow-md mt-6 text-sm rounded">
+                <div class="bg-gray-600 text-white py-4 rounded-t text-center font-medium tracking-wide">Egyező szavak</div>
+                <div class="max-h-56 overflow-y-auto" id="match_display">
+                    {% if wordlist | length > 0 %}
+                    <div class="py-2 flex justify-center cursor-pointer hover:bg-gray-100" onclick="fillWord(this)">
+                        <div class="text-gray-500 text-center">{{ wordlist[0][0] | upper }}</div>
+                        <div class="text-gray-500 text-center ml-1">{{ wordlist[0][1] | upper }}</div>
+                        <div class="text-gray-500 text-center ml-1">{{ wordlist[0][2] | upper }}</div>
+                        <div class="text-gray-500 text-center ml-1">{{ wordlist[0][3] | upper }}</div>
+                        <div class="text-gray-500 text-center ml-1">{{ wordlist[0][4] | upper }}</div>
+                    </div>
+                    {% endif %}
+                    {% for word in wordlist[1:] %}
+                    <div class="py-2 flex justify-center border-t border-gray-200 cursor-pointer hover:bg-gray-100" onclick="fillWord(this)">
+                        <div class="text-gray-500 text-center">{{ word[0] | upper }}</div>
+                        <div class="text-gray-500 text-center ml-1">{{ word[1] | upper }}</div>
+                        <div class="text-gray-500 text-center ml-1">{{ word[2] | upper }}</div>
+                        <div class="text-gray-500 text-center ml-1">{{ word[3] | upper }}</div>
+                        <div class="text-gray-500 text-center ml-1">{{ word[4] | upper }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
